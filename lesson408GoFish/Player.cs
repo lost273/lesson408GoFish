@@ -14,7 +14,10 @@ namespace lesson408GoFish {
         private TextBox textBoxOnForm;
 
         public Player(string name, Random random, TextBox textBoxOnForm) {
-            
+            this.name = name;
+            this.random = random;
+            this.textBoxOnForm.Text = $"{textBoxOnForm.Text} {this.name} has just joined the game.{Environment.NewLine}";
+
         }
         public IEnumerable<Values> PullOutBooks() {
             List<Values> books = new List<Values>();
@@ -34,10 +37,12 @@ namespace lesson408GoFish {
         }
 
         public Values GetRandomValue() {
-
+            return cards.Peek(random.Next(cards.Count)).Value;
         }
         public Deck DoYouHaveAny(Values value) {
-
+            Deck deckToReturn = cards.PullOutValues(value);
+            textBoxOnForm.Text = $"{textBoxOnForm.Text} {name} has {deckToReturn.Count}.{Environment.NewLine}";
+            return deckToReturn;
         }
         public void AskForACard(List<Player> players, int myIndex, Deck stock) {
 

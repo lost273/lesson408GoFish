@@ -26,17 +26,17 @@ namespace lesson408GoFish {
             buttonAsk.Enabled = true;
             UpdateForm();
         }
-
+        //Очищаем текстовое поле от предыдущего списка и заполняем набором карт для новой игры
         private void UpdateForm() {
             listHand.Items.Clear();
             foreach (string cardName in game.GetPlayerCardNames())
                 listHand.Items.Add(cardName);
             textBooks.Text = game.DescribeBooks();
-            textProgress.Text += game.DescribePlayerHads();
+            textProgress.Text += game.DescribePlayerHands();
             textProgress.SelectionStart = textProgress.Text.Length;
             textProgress.ScrollToCaret();
         }
-
+        // Игрок выбирает карту и щелкает на кнопке, чтобы узнать если такая карта у соперников
         private void buttonAsk_Click(object sender, EventArgs e) {
             textProgress.Text = "";
             if (listHand.SelectedIndex < 0) {

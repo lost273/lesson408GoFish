@@ -5,32 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace lesson408GoFish {
-    class Card
-    {
-        public Card(Suits suit, Values value)
-        {
+    class Card {
+
+        public Card(Suits suit, Values value) {
             Suit = suit;
             Value = value;
         }
         public Suits Suit { get; set; }
         public Values Value { get; set; }
-        public string Name
-        {
+        public string Name {
             get { return $"{Value} of {Suit}"; }
 
         }
-
+        public static string Plural(Values value) {
+            if (value == Values.Six)
+                return "Sixes";
+            else
+                return $"{value.ToString()}s";
+        }
     }
-    enum Suits
-    {
+    enum Suits {
         Spades = 0,
         Clubs = 1,
         Diamonds = 2,
         Hearts = 3
     }
 
-    enum Values
-    {
+    enum Values {
         Ace = 1,
         Two = 2,
         Three = 3,
