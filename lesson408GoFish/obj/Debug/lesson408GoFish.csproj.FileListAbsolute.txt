@@ -1,2 +1,10 @@
 D:\programs\VS2015\Projects\lesson408GoFish\lesson408GoFish\bin\Debug\lesson408GoFish.exe.config
 D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\bin\Debug\lesson408GoFish.exe.config
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\bin\Debug\lesson408GoFish.exe
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\bin\Debug\lesson408GoFish.pdb
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\obj\Debug\lesson408GoFish.csprojResolveAssemblyReference.cache
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\obj\Debug\lesson408GoFish.Form1.resources
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\obj\Debug\lesson408GoFish.Properties.Resources.resources
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\obj\Debug\lesson408GoFish.csproj.GenerateResource.Cache
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\obj\Debug\lesson408GoFish.exe
+D:\programs\VS2015\Projects\GIT\lesson408GoFish\lesson408GoFish\obj\Debug\lesson408GoFish.pdb

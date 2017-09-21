@@ -16,8 +16,9 @@ namespace lesson408GoFish {
         public Player(string name, Random random, TextBox textBoxOnForm) {
             this.name = name;
             this.random = random;
-            this.textBoxOnForm.Text = $"{textBoxOnForm.Text} {this.name} has just joined the game.{Environment.NewLine}";
-
+            this.cards = new Deck(new Card[] { });
+            this.textBoxOnForm = textBoxOnForm;
+            textBoxOnForm.Text = $"{textBoxOnForm.Text} {this.name} has just joined the game.{Environment.NewLine}";
         }
         public IEnumerable<Values> PullOutBooks() {
             List<Values> books = new List<Values>();
@@ -35,35 +36,44 @@ namespace lesson408GoFish {
             }
             return books;
         }
-
+        // Выбираем случайную карту среди имеющихся у игроков
         public Values GetRandomValue() {
-            return cards.Peek(random.Next(cards.Count)).Value;
+            Card randomCard = cards.Peek(random.Next(cards.Count));
+            return randomCard.Value;
         }
+        //Извлекаем карты, которые соответствуют заданным параметрам
         public Deck DoYouHaveAny(Values value) {
-            Deck deckToReturn = cards.PullOutValues(value);
-            textBoxOnForm.Text = $"{textBoxOnForm.Text} {name} has {deckToReturn.Count}.{Environment.NewLine}";
-            return deckToReturn;
+            Deck cardsIHave = cards.PullOutValues(value);
+            textBoxOnForm.Text = $"{textBoxOnForm.Text} {name} has {cardsIHave.Count} {Card.Plural(value)}{Environment.NewLine}";
+            return cardsIHave;
         }
+        //Метод используется соперником, выбирает случайную карту
         public void AskForACard(List<Player> players, int myIndex, Deck stock) {
-            AskForACard(players,myIndex,stock,GetRandomValue());
+            //Ситуация когда противник отдал последнюю карту
+            if (stock.Count > 0) 
+                if (cards.Count == 0)
+                    cards.Add(stock.Deal());
+            Values randomValue = GetRandomValue();
+            AskForACard(players,myIndex,stock, randomValue);
         }
+        //Проверяем всех игроков(за исключением спрашивающего), добавляем найденные карты
         public void AskForACard(List<Player> players, int myIndex, Deck stock, Values value) {
             this.textBoxOnForm.Text = $"{textBoxOnForm.Text} {this.name} asks if anyone has a {value.ToString()}.{Environment.NewLine}";
-            Deck askedCards;
-            foreach (Player player in players) {
-                askedCards = DoYouHaveAny(value);
-                if (askedCards.Count == 0) {
-                    cards.Add(stock.Deal());
-                    this.textBoxOnForm.Text = $"{textBoxOnForm.Text} {this.name} had to draw from the stock.{Environment.NewLine}";
+            int totalCardGiven = 0;
+            for (int i = 0; i < players.Count; i++) {
+                if (i != myIndex) {
+                    Player player = players[i];
+                    Deck CardsGiven = player.DoYouHaveAny(value);
+                    totalCardGiven += CardsGiven.Count;
+                    while (CardsGiven.Count > 0)
+                        cards.Add(CardsGiven.Deal());
                 }
-                else {
-                    for (int i = askedCards.Count; i > 0; i--) {
-                        cards.Add(askedCards.Deal());
-                    }
-                }
-                
             }
-                
+            //При отсутствии у соперников подходящих карт игрок берет карту из запаса при помощи метода Deal
+            if((totalCardGiven == 0) && (stock.Count > 0)){
+                textBoxOnForm.Text = $"{textBoxOnForm.Text} {Name} must draw from the stock.{Environment.NewLine}";
+                cards.Add(stock.Deal());
+            }
         }
         public int CardCount { get { return cards.Count; } }
         public void TakeCard(Card card) { cards.Add(card); }

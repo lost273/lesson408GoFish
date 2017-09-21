@@ -23,21 +23,96 @@ namespace lesson408GoFish {
             Deal();
             players[0].SortHand();
         }
+        //Вызывается в начале игры, тасует колоду и раздает каждому игроку по пять карт
+        //Собирает взятки, если таковые появляются
         private void Deal() {
             stock.Shuffle();
-
+            for(int i =0; i < 5; i++)
+                foreach (Player player in players)
+                    player.TakeCard(stock.Deal());
+            foreach (Player player in players)
+                    PullOutBooks(player);
         }
+        //После щелчка по кнопке ASK вызывается метод AskForACard с выбранной картой
+        //Затем метод AskForACard вызывается для каждого игрока
         public bool PlayOneRound(int selectedPlayerCard) {
-
+            Values cardToAskFor = players[0].Peek(selectedPlayerCard).Value;
+            for(int i = 0; i < players.Count; i++) {
+                if (i == 0)
+                    players[0].AskForACard(players, 0, stock, cardToAskFor);
+                else
+                    players[i].AskForACard(players, i ,stock);
+                if (PullOutBooks(players[i])) {
+                    //Если после того как игрок спросил карту, образовалась взятка, она у него забирается.
+                    textBoxOnForm.Text += players[i].Name
+                        + "drew a new hand" + Environment.NewLine;
+                    int card = 1;
+                    //Если взяток нет, он берет новые 5 карт из запаса
+                    while (card <= 5 && stock.Count > 0) {
+                        players[i].TakeCard(stock.Deal());
+                        card++;
+                    }
+                }
+                //После каждого тура карты игрока сортируются
+                players[0].SortHand();
+                //Проверяем не закончилась ли игра
+                if (stock.Count == 0) {
+                    textBoxOnForm.Text = "The stock is out of cards. Game over!" + Environment.NewLine;
+                    return true;
+                }
+            }
+            return false;    
         }
+        //Проверяет карты игрока на наличие взяток, которые добавляются в словарь
+        // если карт не осталось, возращает true
         public bool PullOutBooks(Player player) {
-
+            IEnumerable<Values> booksPulled = player.PullOutBooks();
+            foreach (Values value in booksPulled)
+                books.Add(value, player);
+            if (player.CardCount == 0)
+                return true;
+            return false;
         }
+        //Превращаем записи словаря в строки
         public string DescribeBooks() {
-
+            string whoHasWhichBooks = "";
+            foreach (Values value in books.Keys)
+                whoHasWhichBooks += books[value].Name + " has a book of "
+                    + Card.Plural(value) + Environment.NewLine;
+            return whoHasWhichBooks;
         }
+        // Определяем победителя после взятия последней карты
+        // на основе информации из словаря winners
         public string GetWinnerName() {
-
+            //Ключ - имя игрока, значение - количество взяток
+            Dictionary<string, int> winners = new Dictionary<string, int>();
+            foreach (Values value in books.Keys) {
+                string name = books[value].Name;
+                if (winners.ContainsKey(name))
+                    winners[name]++;
+                else
+                    winners.Add(name,1);
+            }
+            //Определяем максимальное количество взяток в mostBooks
+            int mostBooks = 0;
+            foreach (string name in winners.Keys)
+                if (winners[name] > mostBooks)
+                    mostBooks = winners[name];
+            bool tie = false;
+            string winnerList = "";
+            foreach (string name in winners.Keys)
+                if (winners[name] == mostBooks) {
+                    if (!string.IsNullOrEmpty(winnerList)) {
+                        winnerList += " and ";
+                        tie = true;
+                    }
+                    winnerList += name;
+                }
+            winnerList += " with " + mostBooks + " books";
+            if (tie)
+                return "A tie between " + winnerList;
+            else
+                return winnerList;
         }
         public IEnumerable<string> GetPlayerCardNames() {
             return players[0].GetCardNames();
