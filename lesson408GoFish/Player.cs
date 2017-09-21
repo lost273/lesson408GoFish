@@ -45,10 +45,25 @@ namespace lesson408GoFish {
             return deckToReturn;
         }
         public void AskForACard(List<Player> players, int myIndex, Deck stock) {
-
+            AskForACard(players,myIndex,stock,GetRandomValue());
         }
         public void AskForACard(List<Player> players, int myIndex, Deck stock, Values value) {
-
+            this.textBoxOnForm.Text = $"{textBoxOnForm.Text} {this.name} asks if anyone has a {value.ToString()}.{Environment.NewLine}";
+            Deck askedCards;
+            foreach (Player player in players) {
+                askedCards = DoYouHaveAny(value);
+                if (askedCards.Count == 0) {
+                    cards.Add(stock.Deal());
+                    this.textBoxOnForm.Text = $"{textBoxOnForm.Text} {this.name} had to draw from the stock.{Environment.NewLine}";
+                }
+                else {
+                    for (int i = askedCards.Count; i > 0; i--) {
+                        cards.Add(askedCards.Deal());
+                    }
+                }
+                
+            }
+                
         }
         public int CardCount { get { return cards.Count; } }
         public void TakeCard(Card card) { cards.Add(card); }

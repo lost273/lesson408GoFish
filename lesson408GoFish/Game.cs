@@ -24,6 +24,7 @@ namespace lesson408GoFish {
             players[0].SortHand();
         }
         private void Deal() {
+            stock.Shuffle();
 
         }
         public bool PlayOneRound(int selectedPlayerCard) {
